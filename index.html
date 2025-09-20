@@ -1,20 +1,1259 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <title>Flowers</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@600&display=swap">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;700&family=Dancing+Script&display=swap"
-    rel="stylesheet" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flower Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;700&family=Dancing+Script:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #ec4899;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .cart-preview {
+            transition: opacity 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .cart-preview.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .promo-header {
+            background: linear-gradient(90deg, #ec4899, #f472b6);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 100%;
+            overflow: hidden;
+            background: url('https://images.ctfassets.net/ztm44xofsurz/32XdybkOKe4BA8xy5ecoeg/ce4a5aa80274002c338098b733283116/0868_PF_Summer25-Site_Summer_SWAG_Flip_v2.jpg?w=1920&fm=webp&q=70') center/cover no-repeat;
+            width: 100%;
+            max-width: 1700px;
+            height: 60vh;
+            min-height: 400px;
+            border-top: 3px solid #333;
+            margin: 0 auto 4rem auto;
+        }
+
+        .box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 1rem;
+            background-color: #f6f6f6;
+            padding: 2rem;
+            font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+            width: min(90%, 600px);
+        }
+
+        .box h2 {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: #b30059;
+        }
+
+        .box p {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: #444;
+        }
+
+        .box button {
+            padding: 0.8rem 1.5rem;
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            background-color: #b30059;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .box button:hover {
+            background-color: #8e0047;
+        }
+
+        .h2out {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            color: #2c2c2c;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .boxes {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1rem 2rem 4rem;
+            margin-bottom: 2rem;
+        }
+
+        .b {
+            flex: 1 1 250px;
+            max-width: 300px;
+        }
+
+        .b img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .b p {
+            font-family: 'Playfair Display', serif;
+            color: #444;
+            margin-top: 0.75rem;
+            font-size: clamp(0.9rem, 1.8vw, 1rem);
+            width: 100%;
+        }
+
+        .sale-price {
+            color: red;
+            font-weight: bold;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            margin: 0;
+        }
+
+        .boxes .b {
+            width: 220px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            background: #fff;
+        }
+
+        .boxes button {
+            flex-basis: 30%;
+            text-align: center;
+            margin-top: 20px;
+            background: #ff4d6d;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .boxes button:hover {
+            background: #e63c5d;
+        }
+
+        .birthday {
+            width: 100%;
+            max-width: 1700px;
+            min-height: 400px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            margin: 2rem auto;
+        }
+
+        .birthday img {
+            width: 100%;
+            max-width: 50%;
+            height: 500px;
+            min-height: 300px;
+            object-fit: cover;
+        }
+
+        .birthday .txt {
+            width: 100%;
+            max-width: 50%;
+            background-color: #f6f6f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 2rem;
+            height: 500px;
+        }
+
+        .birthday .txt h2 {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            color: #b30059;
+        }
+
+        .birthday .txt p {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: #444;
+            text-align: center;
+        }
+
+        .birthday .txt button {
+            padding: 0.8rem 1.5rem;
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            background-color: #b30059;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .birthday .txt button:hover {
+            background-color: #8e0047;
+        }
+
+        .sph2 {
+            font-family: 'Great Vibes', 'Playfair Display', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            color: #2c2c2c;
+            text-align: center;
+            margin: 4rem 0 2rem;
+        }
+
+        .special {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            padding: 1rem 2rem 2rem;
+        }
+
+        .special .box1 {
+            flex: 1 1 250px;
+            max-width: 280px;
+            background-color: #f6f6f6;
+            border-radius: 0 0 12px 12px;
+        }
+
+        .special .box1 img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .special .box1 p {
+            font-family: 'Great Vibes', 'Dancing Script', 'Playfair Display', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #444;
+            margin-top: 0.75rem;
+            font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+            width: 100%;
+            text-align: center;
+            padding: 0 1rem 1rem;
+        }
+
+        .special .box1:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px);
+            transition: all 0.3s ease;
+        }
+
+        .boxes .b:hover {
+            transform: translateY(-5px);
+            transition: all 0.3s ease;
+        }
+
+        .mother {
+            background: url('https://images.ctfassets.net/ztm44xofsurz/24cNBKLBsgyDagMeXibj3K/6527963a00a60ba9710b3bc0178f64fb/1010_PF_Summer25-Site_GrandparentsDay_Hero.jpg?w=1920&fm=webp&q=70') center/cover no-repeat;
+            width: 100%;
+            max-width: 1700px;
+            height: 50vh;
+            min-height: 350px;
+            display: flex;
+            align-items: center;
+            margin: 2rem auto;
+        }
+
+        .mother .txt {
+            width: min(1000%, 900px);
+            background-color: #f6f6f6;
+            display: flex;
+            align-items: start;
+            justify-content: center;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 2rem;
+            font-size: clamp(1.7rem, 1vw, 1.7rem);
+            margin: 0 auto;
+            border-radius: 12px;
+        }
+
+        .mother .txt h3 {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(2rem, 1vw, 7rem);
+            color: #b30059;
+        }
+
+        .mother .txt p {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(0.9rem, 1.8vw, 1rem);
+            color: #444;
+        }
+
+        .mother .txt button {
+            padding: 0.75rem 1.5rem;
+            font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+            background-color: #b30059;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .mother .txt button:hover {
+            background-color: #8e0047;
+        }
+
+        #btn2 {
+            padding: 0.75rem 1.2rem;
+            font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+            background-color: #b30059;
+            color: #fff;
+            border: none;
+            border-radius: 17px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        #btn2:hover {
+            background-color: #8e0047;
+        }
+
+        footer {
+            background-color: #2c2c2c;
+            color: #fff;
+            padding: 2.5rem 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 2rem;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .footer-section {
+            flex: 1 1 250px;
+            max-width: 350px;
+            padding: 1rem;
+        }
+
+        .footer-section h3 {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(1.5rem, 3vw, 1.75rem);
+            color: #b30059;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            font-size: clamp(0.9rem, 1.5vw, 1rem);
+            color: #ddd;
+            margin: 0.5rem 0;
+            text-decoration: none;
+        }
+
+        .footer-section a:hover {
+            color: #b30059;
+            transition: color 0.3s ease;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            padding: 0.6rem;
+            font-size: clamp(0.9rem, 1.5vw, 1rem);
+            border: none;
+            border-radius: 5px;
+            font-family: 'Playfair Display', serif;
+            background-color: #f6f6f6;
+            color: #444;
+        }
+
+        .contact-form textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .contact-form button {
+            padding: 0.75rem 1.2rem;
+            font-size: clamp(0.9rem, 1.5vw, 1rem);
+            background-color: #b30059;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .contact-form button:hover {
+            background-color: #8e0047;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 1rem 0;
+            font-size: clamp(0.8rem, 1.2vw, 0.9rem);
+            color: #ddd;
+            font-family: 'Playfair Display', serif;
+            width: 100%;
+        }
+
+        @media (max-width: 1024px) {
+            .main {
+                height: 50vh;
+                min-height: 350px;
+            }
+
+            .box {
+                width: min(90%, 500px);
+                padding: 1.5rem;
+            }
+
+            .boxes {
+                padding: 1rem;
+            }
+
+            .boxes button,
+            #btn2 {
+                position: static;
+                margin: 1rem auto;
+            }
+
+            .birthday {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .birthday img,
+            .birthday .txt {
+                max-width: 100%;
+                width: 100%;
+                min-height: 250px;
+            }
+
+            .special {
+                gap: 1.5rem;
+            }
+
+            .mother {
+                height: 40vh;
+                min-height: 300px;
+            }
+
+            .mother .txt {
+                width: min(90%, 500px);
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main {
+                height: 40vh;
+                min-height: 300px;
+            }
+
+            .box {
+                width: 90%;
+                padding: 1rem;
+            }
+
+            .boxes {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .b {
+                max-width: 100%;
+            }
+
+            .birthday {
+                margin: 1rem auto;
+            }
+
+            .birthday img {
+                min-height: 200px;
+            }
+
+            .special {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .special .box1 {
+                max-width: 100%;
+            }
+
+            .mother {
+                height: auto;
+                padding: 1rem;
+            }
+
+            .mother .txt {
+                width: 100%;
+                margin: 0;
+                padding: 1rem;
+            }
+
+            footer {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 1.5rem;
+            }
+
+            .footer-section {
+                max-width: 100%;
+            }
+        }
+
+        @media (min-width: 1440px) {
+            .main {
+                height: 70vh;
+            }
+
+            .box {
+                width: min(45%, 700px);
+            }
+
+            .boxes {
+                gap: 1.5rem;
+            }
+
+            .b {
+                max-width: 350px;
+            }
+
+            .birthday img,
+            .birthday .txt {
+                max-width: 50%;
+            }
+
+            .special .box1 {
+                max-width: 300px;
+            }
+
+            .mother {
+                height: 60vh;
+            }
+
+            .mother .txt {
+                width: min(45%, 700px);
+            }
+        }
+    </style>
 </head>
 
-<body>
-  <app-root></app-root>
+<body class="bg-gray-50">
+    <nav id="navbar" class="bg-pink-700 text-white p-4 fixed w-full top-0 z-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#/" class="text-xl font-bold" aria-label="Flower Shop Home">Flower Shop</a>
+            <div class="flex gap-4 items-center">
+                <a href="#/flowers" aria-label="Browse Flowers">Flowers</a>
+                <a href="#/buy" id="cart-link" class="relative" aria-label="View Cart">Cart (<span id="cart-count"
+                        class="hidden">0</span>)</a>
+                <a href="#/wishlist" aria-label="View Wishlist">Wishlist</a>
+                <a href="https://t.me/yourtelegramchannel" target="_blank"
+                    class="bg-teal-500 px-4 py-2 rounded hover:bg-teal-600" aria-label="Join Telegram">IG</a>
+                <a href="https://t.me/yourtelegramchannel" target="_blank"
+                    class="bg-teal-500 px-4 py-2 rounded hover:bg-teal-600" aria-label="Join Telegram">TG</a>
+                <button id="order-history-btn" class="bg-pink-500 px-4 py-2 rounded hover:bg-pink-600"
+                    aria-label="View Order History">Order History</button>
+                <button id="theme-toggle" class="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300"
+                    aria-label="Toggle Theme">Dark Mode</button>
+            </div>
+        </div>
+        <div id="cart-preview"
+            class="cart-preview hidden absolute bg-white text-black p-4 shadow-lg rounded right-4 top-16 w-64">
+            <div id="cart-preview-items"></div>
+            <p class="font-bold">Total: $<span id="cart-preview-total">0.00</span></p>
+        </div>
+    </nav>
+
+    <main class="container mx-auto pt-20 pb-6">
+        <section id="home-section" class="p-6">
+            <div class="promo-header">Gullar bilan hayot yanada go'zal!</div>
+            <div class="main">
+                <div class="box">
+                    <h2>Bizning do'konimizda sizday go'zal va nafis gullar sizni kutmoqda.</h2>
+                    <button onclick="navigateTo('flowers')" aria-label="Shop Now">Shop Now</button>
+                </div>
+            </div>
+            <h2 class="h2out">Our Featured Bouquets</h2>
+            <div class="boxes">
+                <div class="b">
+                    <img src="https://cdn.shopify.com/s/files/1/0507/3754/5401/files/FE211D_LOL_preset_proflowers-mx-tile-wide-sv-new.jpg?v=1753109276&width=768"
+                        alt="Anemona Bouquet">
+                    <p>Anemona Bouquet</p>
+                    <p><span class="sale-price">$54.00</span> <span class="original-price">$60.00</span></p>
+                    <button onclick="navigateTo('flowers?category=popular')"
+                        aria-label="Shop Anemona Bouquet">Shop</button>
+                </div>
+                <div class="b">
+                    <img src="https://cdn.shopify.com/s/files/1/0507/3754/5401/files/R5559D_LOL_preset_proflowers-mx-tile-wide-sv-new.jpg?v=1735274823&width=768"
+                        alt="Rose Bouquet">
+                    <p>Rose Bouquet</p>
+                    <p><span class="sale-price">$54.00</span> <span class="original-price">$60.00</span></p>
+                    <button onclick="navigateTo('flowers?category=trending')"
+                        aria-label="Shop Rose Bouquet">Shop</button>
+                </div>
+                <div class="b">
+                    <img src="https://images.ctfassets.net/ztm44xofsurz/5AtOrwkOXOVK6f6vDk9dZS/19820c4aef8119ab7622f7820a77c285/0775_PF_MDay25-Site_HP_60Under_CatTile.jpg?w=768&fm=webp&q=70"
+                        alt="Birthday Special">
+                    <p>Birthday Special</p>
+                    <p><span class="sale-price">$54.00</span> <span class="original-price">$60.00</span></p>
+                    <button onclick="navigateTo('flowers?category=birthday')"
+                        aria-label="Shop Birthday Special">Shop</button>
+                </div>
+            </div>
+            <button id="btn2" onclick="navigateTo('flowers')" aria-label="Shop All Bouquets">Shop All</button>
+            <div class="birthday">
+                <img src="https://images.ctfassets.net/ztm44xofsurz/5AtOrwkOXOVK6f6vDk9dZS/19820c4aef8119ab7622f7820a77c285/0775_PF_MDay25-Site_HP_60Under_CatTile.jpg?w=768&fm=webp&q=70"
+                    alt="Birthday Bouquet">
+                <div class="txt">
+                    <h2 class="sph2" style="margin: 0;">Tabrik uchun gullar</h2>
+                    <p>Baxtli kunlarni guldastalar bilan yanada baxtli qiling!</p>
+                    <button onclick="navigateTo('flowers?category=birthday')" aria-label="Shop Birthday Bouquets">Shop
+                        Birthday</button>
+                </div>
+            </div>
+            <h2 class="sph2">Special Offers</h2>
+            <div class="special">
+                <div class="box1">
+                    <img src="https://cdn.shopify.com/s/files/1/0507/3754/5401/files/FE211D_LOL_preset_proflowers-mx-tile-wide-sv-new.jpg?v=1753109276&width=768"
+                        alt="Special Offer 1">
+                    <p>Exclusive Anemona Deal</p>
+                </div>
+                <div class="box1">
+                    <img src="https://cdn.shopify.com/s/files/1/0507/3754/5401/files/R5559D_LOL_preset_proflowers-mx-tile-wide-sv-new.jpg?v=1735274823&width=768"
+                        alt="Special Offer 2">
+                    <p>Luxury Rose Collection</p>
+                </div>
+                <div class="box1">
+                    <img src="https://images.ctfassets.net/ztm44xofsurz/1YDnZuPg1wticVGzWWOdd8/eb83a067ec188673e0dfee338006caed/0935_PF_Summer25-Site_ParentDay_CatTile.jpg?w=768&fm=webp&q=70"
+                        alt="Special Offer 3">
+                    <p>Sympathy Bouquet</p>
+                </div>
+            </div>
+            <div class="mother">
+                <div class="txt">
+                    <h3>Onangiz yoki qarindoshingizni faqatgina paranjilar yechilgan kunda eslamang! <span
+                            style="text-decoration: line-through;">
+                            (8-mart)</span></h3>
+                    <p>O'z tabingizga mos bo'lgan bir-biridan go'zal guldastalarga marhamat.</p>
+                    <button onclick="navigateTo('flowers?category=sympathy')" aria-label="Shop Sympathy Bouquets">Shop
+                        Now</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="flowers-section" class="hidden p-6">
+            <div class="flex flex-col md:flex-row gap-4 mb-4">
+                <input id="search-name" type="text" placeholder="Search by name" class="border p-2 rounded w-full"
+                    aria-label="Search flowers by name">
+                <input id="min-price" type="number" placeholder="Min price" min="0" class="border p-2 rounded w-full"
+                    aria-label="Minimum price filter">
+                <input id="max-price" type="number" placeholder="Max price" min="0" class="border p-2 rounded w-full"
+                    aria-label="Maximum price filter">
+                <select id="category-filter" class="border p-2 rounded w-full" aria-label="Filter by category">
+                    <option value="">All Categories</option>
+                    <option value="popular">Popular</option>
+                    <option value="trending">Trending</option>
+                    <option value="birthday">Birthday</option>
+                    <option value="sympathy">Sympathy</option>
+                </select>
+            </div>
+            <div id="suggestions" class="hidden bg-white shadow p-2 rounded mb-4"></div>
+            <div id="flowers-list" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+        </section>
+
+        <section id="buy-section" class="hidden p-6">
+            <div id="cart-loading" class="hidden">
+                <div class="spinner"></div>
+            </div>
+            <div id="cart-empty" class="text-center hidden">Your cart is empty.</div>
+            <div id="cart-items" class="space-y-4"></div>
+            <div id="cart-total" class="text-right font-bold mt-4 hidden">Total: $<span>0.00</span></div>
+            <button id="clear-cart" class="bg-red-500 text-white px-4 py-2 mt-4 rounded hover:bg-red-600"
+                aria-label="Clear Cart">Clear Cart</button>
+        </section>
+
+        <section id="wishlist-section" class="hidden p-6">
+            <div id="wishlist-empty" class="text-center">Your wishlist is empty.</div>
+            <div id="wishlist-items" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-section">
+            <h3>About Us</h3>
+            <p>Discover the beauty of flowers with our carefully curated bouquets, perfect for any occasion.</p>
+        </div>
+        <div class="footer-section">
+            <h3>Quick Links</h3>
+            <a href="#/flowers" aria-label="Browse Flowers">Shop Flowers</a>
+            <a href="#/wishlist" aria-label="View Wishlist">Wishlist</a>
+            <a href="#/buy" aria-label="View Cart">Cart</a>
+        </div>
+        <div class="footer-section">
+            <h3>Contact Us</h3>
+            <form id="contact-form" class="contact-form">
+                <input id="form-name" type="text" placeholder="Name" aria-label="Your name" required>
+                <input id="form-email" type="email" placeholder="Email" aria-label="Your email" required>
+                <textarea id="form-message" placeholder="Message" aria-label="Your message" required></textarea>
+                <button type="submit" aria-label="Submit contact form">Send</button>
+                <p id="form-success" class="hidden text-green-500">Message sent!</p>
+            </form>
+        </div>
+        <div class="footer-bottom">© 2025 Flower Shop. All rights reserved.</div>
+    </footer>
+
+    <div id="purchase-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20">
+        <div class="bg-white p-6 rounded max-w-md w-full">
+            <img id="purchase-image" class="w-48 h-48 object-cover rounded mb-4 mx-auto" alt="Selected flower">
+            <h3 id="purchase-name" class="text-lg font-bold text-center"></h3>
+            <div class="flex gap-2 mb-4 justify-center">
+                <button class="appearance-btn bg-purple-400 px-4 py-2 rounded hover:bg-purple-500"
+                    onclick="setAppearance('standard')" aria-label="Select Standard appearance">Standard</button>
+                <button class="appearance-btn bg-purple-400 px-4 py-2 rounded hover:bg-purple-500"
+                    onclick="setAppearance('deluxe')" aria-label="Select Deluxe appearance">Deluxe</button>
+                <button class="appearance-btn bg-purple-400 px-4 py-2 rounded hover:bg-purple-500"
+                    onclick="setAppearance('premium')" aria-label="Select Premium appearance">Premium</button>
+            </div>
+            <input id="cart-name" type="text" placeholder="Cart Name" class="border p-2 mb-2 w-full rounded"
+                aria-label="Cart name" required>
+            <input id="zip-code" type="text" placeholder="Zip Code" class="border p-2 mb-2 w-full rounded"
+                aria-label="Zip code" required>
+            <div class="flex gap-2 justify-center">
+                <button onclick="confirmPurchase()" class="bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600"
+                    aria-label="Confirm purchase">Confirm</button>
+                <button onclick="closeModal('purchase-modal')" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
+                    aria-label="Cancel purchase">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="remove-confirmation-modal"
+        class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20">
+        <div class="bg-white p-6 rounded max-w-md w-full">
+            <p id="remove-confirmation-text" class="mb-4"></p>
+            <div class="flex gap-2 justify-center">
+                <button onclick="confirmRemove()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                    aria-label="Confirm removal">Confirm</button>
+                <button onclick="closeModal('remove-confirmation-modal')"
+                    class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400" aria-label="Cancel removal">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="thank-you-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20">
+        <div class="bg-white p-6 rounded max-w-md w-full">
+            <p class="text-center mb-4">Thank you for your purchase!</p>
+            <button onclick="closeModal('thank-you-modal')"
+                class="bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 w-full"
+                aria-label="Close thank you modal">Close</button>
+        </div>
+    </div>
+
+    <div id="order-history-modal"
+        class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20">
+        <div class="bg-white p-6 rounded max-w-md w-full">
+            <h3 class="text-lg font-bold mb-4">Order History</h3>
+            <div id="order-history-content" class="space-y-4"></div>
+            <button onclick="closeModal('order-history-modal')"
+                class="bg-pink-500 text-white px-4 py-2 rounded mt-4 w-full"
+                aria-label="Close order history modal">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Flower Data
+        const flowers = [
+            { id: 1, name: "Anemona Bouquet", price: 54, originalPrice: 60, category: "popular", image: "https://cdn.shopify.com/s/files/1/0507/3754/5401/files/FE211D_LOL_preset_proflowers-mx-tile-wide-sv-new.jpg?v=1753109276&width=768", description: "A delicate bouquet of anemona flowers.", appearances: { standard: { priceMultiplier: 1 }, deluxe: { priceMultiplier: 1.5 }, premium: { priceMultiplier: 2 } } },
+            { id: 2, name: "Rose Bouquet", price: 54, originalPrice: 60, category: "trending", image: "https://cdn.shopify.com/s/files/1/0507/3754/5401/files/R5559D_LOL_preset_proflowers-mx-tile-wide-sv-new.jpg?v=1735274823&width=768", description: "A classic bouquet of roses.", appearances: { standard: { priceMultiplier: 1 }, deluxe: { priceMultiplier: 1.5 }, premium: { priceMultiplier: 2 } } },
+            { id: 3, name: "Birthday Special", price: 54, originalPrice: 60, category: "birthday", image: "https://images.ctfassets.net/ztm44xofsurz/5AtOrwkOXOVK6f6vDk9dZS/19820c4aef8119ab7622f7820a77c285/0775_PF_MDay25-Site_HP_60Under_CatTile.jpg?w=768&fm=webp&q=70", description: "Perfect for birthdays.", appearances: { standard: { priceMultiplier: 1 }, deluxe: { priceMultiplier: 1.5 }, premium: { priceMultiplier: 2 } } },
+            { id: 4, name: "Sympathy Bouquet", price: 54, originalPrice: 60, category: "sympathy", image: "https://images.ctfassets.net/ztm44xofsurz/1YDnZuPg1wticVGzWWOdd8/eb83a067ec188673e0dfee338006caed/0935_PF_Summer25-Site_ParentDay_CatTile.jpg?w=768&fm=webp&q=70", description: "For special moments.", appearances: { standard: { priceMultiplier: 1 }, deluxe: { priceMultiplier: 1.5 }, premium: { priceMultiplier: 2 } } },
+        ];
+
+        // State Management
+        let cart = [];
+        let wishlist = [];
+        let orderHistory = [];
+        let theme = 'light';
+        let selectedItem = null;
+        let selectedAppearance = 'standard';
+        let selectedItems = [];
+
+        function loadState() {
+            try {
+                cart = JSON.parse(localStorage.getItem('cart')) || [];
+                wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+                orderHistory = JSON.parse(localStorage.getItem('orderHistory')) || [];
+                theme = localStorage.getItem('theme') || 'light';
+            } catch (e) {
+                console.error('Error loading state from localStorage:', e);
+                alert('Unable to load saved data. Using default values.');
+                cart = [];
+                wishlist = [];
+                orderHistory = [];
+                theme = 'light';
+            }
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem('cart', JSON.stringify(cart));
+                localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
+                localStorage.setItem('theme', theme);
+            } catch (e) {
+                console.error('Error saving state to localStorage:', e);
+                alert('Unable to save data. Your changes may not persist.');
+            }
+        }
+
+        // Utility Functions
+        function sanitizeHTML(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function updateCartCount() {
+            const count = cart.reduce((sum, item) => sum + item.count, 0);
+            const cartCount = document.getElementById('cart-count');
+            cartCount.textContent = count;
+            cartCount.classList.toggle('hidden', count === 0);
+        }
+
+        function getTotalPrice(items) {
+            return items.reduce((total, item) => total + item.flower.price * item.count * (item.appearance ? item.flower.appearances[item.appearance].priceMultiplier : 1), 0).toFixed(2);
+        }
+
+        // Navigation
+        function navigateTo(route) {
+            window.location.hash = route;
+            renderPage();
+        }
+
+        function renderPage() {
+            const hash = window.location.hash || '#/';
+            document.querySelectorAll('section').forEach(section => section.classList.add('hidden'));
+            if (hash.startsWith('#/flowers')) {
+                document.getElementById('flowers-section').classList.remove('hidden');
+                renderFlowers();
+            } else if (hash.startsWith('#/buy')) {
+                document.getElementById('buy-section').classList.remove('hidden');
+                renderCart();
+            } else if (hash.startsWith('#/wishlist')) {
+                document.getElementById('wishlist-section').classList.remove('hidden');
+                renderWishlist();
+            } else {
+                document.getElementById('home-section').classList.remove('hidden');
+            }
+        }
+
+        // Theme Toggle
+        function toggleTheme() {
+            theme = theme === 'light' ? 'dark' : 'light';
+            document.body.classList.toggle('dark', theme === 'dark');
+            document.body.classList.toggle('bg-gray-50', theme === 'light');
+            document.body.classList.toggle('bg-gray-800', theme === 'dark');
+            document.getElementById('navbar').classList.toggle('bg-pink-700', theme === 'light');
+            document.getElementById('navbar').classList.toggle('bg-gray-900', theme === 'dark');
+            document.getElementById('theme-toggle').textContent = theme === 'light' ? 'Dark Mode' : 'Light Mode';
+            document.querySelectorAll('.flowers-section, .buy-section, .wishlist-section').forEach(section => {
+                section.classList.toggle('bg-gray-50', theme === 'light');
+                section.classList.toggle('bg-gray-800', theme === 'dark');
+                section.classList.toggle('text-gray-200', theme === 'dark');
+            });
+            saveState();
+        }
+
+        // Cart Functions
+        function addToCart(flower, appearance = 'standard') {
+            selectedAppearance = appearance;
+            const existing = cart.find(item => item.flower.id === flower.id && item.appearance === selectedAppearance);
+            if (existing) {
+                cart = cart.map(item => item.flower.id === flower.id && item.appearance === selectedAppearance ? { ...item, count: item.count + 1 } : item);
+            } else {
+                cart.push({ flower, count: 1, appearance: selectedAppearance });
+            }
+            saveState();
+            updateCartCount();
+        }
+
+        function updateCart(flowerId, count, appearance = selectedAppearance) {
+            const parsedCount = parseInt(count, 10);
+            if (isNaN(parsedCount) || parsedCount < 1) return;
+            cart = cart.map(item => item.flower.id === flowerId && item.appearance === appearance ? { ...item, count: parsedCount } : item);
+            saveState();
+            updateCartCount();
+            renderCart();
+        }
+
+        function removeFromCart(flowerId, appearance) {
+            cart = cart.filter(item => !(item.flower.id === flowerId && item.appearance === appearance));
+            selectedItems = selectedItems.filter(item => !(item.flower.id === flowerId && item.appearance === appearance));
+            saveState();
+            updateCartCount();
+            renderCart();
+        }
+
+        function clearCart() {
+            cart = [];
+            selectedItems = [];
+            saveState();
+            updateCartCount();
+            renderCart();
+        }
+
+        // Wishlist Functions
+        function addToWishlist(flower) {
+            if (!wishlist.some(item => item.id === flower.id)) {
+                wishlist.push(flower);
+                saveState();
+                renderFlowers();
+                renderWishlist();
+            }
+        }
+
+        function removeFromWishlist(flowerId) {
+            wishlist = wishlist.filter(item => item.id !== flowerId);
+            saveState();
+            renderFlowers();
+            renderWishlist();
+        }
+
+        // Order History
+        function addToOrderHistory(item, appearance, cartName, zipCode) {
+            const finalPrice = item.flower.price * item.count * item.flower.appearances[appearance].priceMultiplier;
+            orderHistory.push({ item, appearance, cartName, zipCode, finalPrice, date: new Date().toLocaleString() });
+            saveState();
+        }
+
+        // Modal Functions
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+            document.getElementById(id).focus();
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        // Render Functions
+        function renderFlowers() {
+            const params = new URLSearchParams(window.location.hash.split('?')[1] || '');
+            const category = params.get('category');
+            let filteredFlowers = category ? flowers.filter(f => f.category === category) : flowers;
+            const searchName = sanitizeHTML(document.getElementById('search-name').value.toLowerCase());
+            const minPrice = document.getElementById('min-price').value;
+            const maxPrice = document.getElementById('max-price').value;
+            const selectedCategory = document.getElementById('category-filter').value;
+
+            filteredFlowers = filteredFlowers.filter(flower => {
+                const nameMatch = flower.name.toLowerCase().includes(searchName);
+                const priceMatch = (!minPrice || flower.price >= Number(minPrice)) && (!maxPrice || flower.price <= Number(maxPrice));
+                const categoryMatch = !selectedCategory || flower.category === selectedCategory;
+                return nameMatch && priceMatch && categoryMatch;
+            });
+
+            const suggestions = searchName ? flowers.filter(flower => flower.name.toLowerCase().includes(searchName)).map(flower => flower.name).slice(0, 5) : [];
+            const suggestionsDiv = document.getElementById('suggestions');
+            suggestionsDiv.innerHTML = '';
+            suggestions.forEach(s => {
+                const div = document.createElement('div');
+                div.className = 'p-2 hover:bg-gray-100 cursor-pointer';
+                div.textContent = s;
+                div.onclick = () => {
+                    document.getElementById('search-name').value = s;
+                    renderFlowers();
+                };
+                suggestionsDiv.appendChild(div);
+            });
+            suggestionsDiv.classList.toggle('hidden', suggestions.length === 0);
+
+            const flowersList = document.getElementById('flowers-list');
+            flowersList.innerHTML = '';
+            filteredFlowers.forEach(flower => {
+                const div = document.createElement('div');
+                div.className = 'bg-white rounded-lg p-6 shadow hover:shadow-lg hover:-translate-y-1 transition';
+                div.innerHTML = `
+                    <img src="${sanitizeHTML(flower.image)}" alt="${sanitizeHTML(flower.name)}" class="w-full h-48 object-cover rounded mb-4" onerror="this.src='https://via.placeholder.com/150'; this.onerror=null;">
+                    <h3 class="text-lg font-bold">${sanitizeHTML(flower.name)}</h3>
+                    <p class="text-gray-600">${sanitizeHTML(flower.description)}</p>
+                    <p class="text-red-500 font-bold">$${flower.price.toFixed(2)} ${flower.originalPrice ? `<span class="text-gray-500 line-through">$${flower.originalPrice.toFixed(2)}</span>` : ''}</p>
+                    <div class="flex gap-2 mt-4">
+                        <select onchange="addToCart(flowers[${flowers.findIndex(f => f.id === flower.id)}], this.value); navigateTo('buy')" class="border p-2 rounded" aria-label="Select appearance for ${sanitizeHTML(flower.name)}">
+                            <option value="standard">Standard</option>
+                            <option value="deluxe">Deluxe</option>
+                            <option value="premium">Premium</option>
+                        </select>
+                        <button onclick="${wishlist.some(item => item.id === flower.id) ? `removeFromWishlist(${flower.id})` : `addToWishlist(flowers[${flowers.findIndex(f => f.id === flower.id)}])`}" class="${wishlist.some(item => item.id === flower.id) ? 'bg-emerald-500 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'} px-4 py-2 rounded" aria-label="${wishlist.some(item => item.id === flower.id) ? 'Remove from Wishlist' : 'Add to Wishlist'}">${wishlist.some(item => item.id === flower.id) ? 'Wishlisted' : 'Add to Wishlist'}</button>
+                    </div>
+                `;
+                flowersList.appendChild(div);
+            });
+        }
+
+        function renderCart() {
+            const cartLoading = document.getElementById('cart-loading');
+            const cartEmpty = document.getElementById('cart-empty');
+            const cartTotal = document.getElementById('cart-total');
+            const cartItems = document.getElementById('cart-items');
+
+            cartLoading.classList.remove('hidden');
+            setTimeout(() => {
+                cartLoading.classList.add('hidden');
+                cartEmpty.classList.toggle('hidden', cart.length > 0);
+                cartTotal.classList.toggle('hidden', cart.length === 0);
+                cartItems.innerHTML = '';
+                cart.forEach((item, index) => {
+                    const div = document.createElement('div');
+                    div.draggable = true;
+                    div.ondragstart = (e) => e.dataTransfer.setData('index', index);
+                    div.ondrop = (e) => handleDrop(e, index);
+                    div.ondragover = (e) => e.preventDefault();
+                    div.className = 'bg-white rounded-lg p-4 flex gap-3 items-start shadow hover:shadow-lg hover:-translate-y-1 transition';
+                    div.innerHTML = `
+                        <input type="checkbox" ${selectedItems.includes(item) ? 'checked' : ''} onchange="toggleSelection(${index})" aria-label="Select ${sanitizeHTML(item.flower.name)} (${item.appearance})">
+                        <img src="${sanitizeHTML(item.flower.image)}" alt="${sanitizeHTML(item.flower.name)}" class="w-24 h-24 object-cover rounded" onerror="this.src='https://via.placeholder.com/150'; this.onerror=null;">
+                        <div class="flex-1">
+                            <div class="flex justify-between">
+                                <h3 class="text-lg font-bold">${sanitizeHTML(item.flower.name)} (${item.appearance})</h3>
+                                <div>
+                                    <p class="text-red-500 font-bold">$${(item.flower.price * item.flower.appearances[item.appearance].priceMultiplier).toFixed(2)}</p>
+                                    <p class="text-gray-500">x ${item.count}</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm">${sanitizeHTML(item.flower.description)}</p>
+                            <p class="font-bold">Total: $${(item.flower.price * item.count * item.flower.appearances[item.appearance].priceMultiplier).toFixed(2)}</p>
+                            <div class="flex gap-2 mt-2">
+                                <button onclick="updateCart(${item.flower.id}, ${item.count - 1}, '${item.appearance}')" ${item.count <= 1 ? 'disabled' : ''} class="bg-gray-200 px-3 py-1 rounded hover:bg-gray-300" aria-label="Decrease quantity">-</button>
+                                <input type="number" value="${item.count}" onchange="updateCart(${item.flower.id}, this.value, '${item.appearance}')" min="1" class="w-16 text-center border rounded" aria-label="Set quantity for ${sanitizeHTML(item.flower.name)}">
+                                <button onclick="updateCart(${item.flower.id}, ${item.count + 1}, '${item.appearance}')" class="bg-gray-200 px-3 py-1 rounded hover:bg-gray-300" aria-label="Increase quantity">+</button>
+                                <div class="ml-auto flex flex-col gap-2">
+                                    <button onclick="setItemToRemove(${item.flower.id}, '${item.appearance}')" class="bg-gray-100 border px-3 py-1 rounded hover:bg-gray-200" aria-label="Remove ${sanitizeHTML(item.flower.name)} from cart">Remove</button>
+                                    <button onclick="openPurchaseModal(${index})" class="bg-pink-500 text-white px-3 py-1 rounded hover:bg-pink-600" aria-label="Purchase ${sanitizeHTML(item.flower.name)}">Buy</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    cartItems.appendChild(div);
+                });
+                cartTotal.querySelector('span').textContent = getTotalPrice(cart);
+            }, 300);
+        }
+
+        function renderWishlist() {
+            document.getElementById('wishlist-empty').classList.toggle('hidden', wishlist.length > 0);
+            const wishlistItems = document.getElementById('wishlist-items');
+            wishlistItems.innerHTML = '';
+            wishlist.forEach(flower => {
+                const div = document.createElement('div');
+                div.className = 'bg-white rounded-lg p-6 shadow hover:shadow-lg hover:-translate-y-1 transition';
+                div.innerHTML = `
+                    <img src="${sanitizeHTML(flower.image)}" alt="${sanitizeHTML(flower.name)}" class="w-48 h-48 object-cover rounded mb-4 mx-auto" onerror="this.src='https://via.placeholder.com/150'; this.onerror=null;">
+                    <h3 class="text-lg font-bold text-center">${sanitizeHTML(flower.name)}</h3>
+                    <p class="text-gray-600 text-center">${sanitizeHTML(flower.description)}</p>
+                    <p class="text-red-500 font-bold text-center">$${flower.price.toFixed(2)}</p>
+                    <div class="flex gap-2 mt-4 justify-center">
+                        <select onchange="addToCart(flowers[${flowers.findIndex(f => f.id === flower.id)}], this.value); navigateTo('buy')" class="border p-2 rounded" aria-label="Select appearance for ${sanitizeHTML(flower.name)}">
+                            <option value="standard">Standard</option>
+                            <option value="deluxe">Deluxe</option>
+                            <option value="premium">Premium</option>
+                        </select>
+                        <button onclick="removeFromWishlist(${flower.id})" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600" aria-label="Remove ${sanitizeHTML(flower.name)} from wishlist">Remove</button>
+                    </div>
+                `;
+                wishlistItems.appendChild(div);
+            });
+        }
+
+        function renderOrderHistory() {
+            const orderHistoryContent = document.getElementById('order-history-content');
+            orderHistoryContent.innerHTML = orderHistory.length === 0 ? '<p class="text-center my-4">No orders yet.</p>' : orderHistory.map((order, index) => `
+                <div class="border-b py-2">
+                    <p><strong>${sanitizeHTML(order.item.flower.name)}</strong> x${order.item.count} (${order.appearance})</p>
+                    <p>Final Price: $${order.finalPrice.toFixed(2)}</p>
+                    <p>Cart Name: ${sanitizeHTML(order.cartName)}</p>
+                    <p>Zip Code: ${sanitizeHTML(order.zipCode)}</p>
+                    <p>Date: ${sanitizeHTML(order.date)}</p>
+                </div>
+            `).join('');
+        }
+
+        // Drag and Drop
+        function handleDrop(e, index) {
+            e.preventDefault();
+            const draggedIndex = Number(e.dataTransfer.getData('index'));
+            if (isNaN(draggedIndex) || draggedIndex < 0 || draggedIndex >= cart.length) {
+                console.warn('Invalid drag-and-drop operation');
+                return;
+            }
+            const newCart = [...cart];
+            const [movedItem] = newCart.splice(draggedIndex, 1);
+            newCart.splice(index, 0, movedItem);
+            cart = newCart;
+            saveState();
+            renderCart();
+        }
+
+        // Cart Selection
+        function toggleSelection(index) {
+            const item = cart[index];
+            if (selectedItems.includes(item)) {
+                selectedItems = selectedItems.filter(i => i.flower.id !== item.flower.id || i.appearance !== item.appearance);
+            } else {
+                selectedItems.push(item);
+            }
+            renderCart();
+        }
+
+        // Purchase Modal
+        function openPurchaseModal(index) {
+            selectedItem = cart[index];
+            document.getElementById('purchase-image').src = selectedItem.flower.image;
+            document.getElementById('purchase-image').alt = sanitizeHTML(selectedItem.flower.name);
+            document.getElementById('purchase-name').textContent = `${sanitizeHTML(selectedItem.flower.name)} (${selectedItem.appearance})`;
+            setAppearance(selectedItem.appearance);
+            document.getElementById('cart-name').value = '';
+            document.getElementById('zip-code').value = '';
+            openModal('purchase-modal');
+        }
+
+        function setAppearance(appearance) {
+            selectedAppearance = appearance;
+            document.querySelectorAll('.appearance-btn').forEach(btn => {
+                btn.classList.toggle('bg-purple-500', btn.textContent.toLowerCase() === appearance);
+                btn.classList.toggle('bg-purple-400', btn.textContent.toLowerCase() !== appearance);
+            });
+        }
+
+        function confirmPurchase() {
+            const cartName = document.getElementById('cart-name').value.trim();
+            const zipCode = document.getElementById('zip-code').value.trim();
+            if (!zipCode || !cartName) {
+                alert('Please enter both cart name and zip code.');
+                return;
+            }
+            if (!/^\d{5}$/.test(zipCode)) {
+                alert('Zip code must be 5 digits.');
+                return;
+            }
+            addToOrderHistory(selectedItem, selectedAppearance, cartName, zipCode);
+            removeFromCart(selectedItem.flower.id, selectedItem.appearance);
+            closeModal('purchase-modal');
+            openModal('thank-you-modal');
+        }
+
+        // Remove Confirmation
+        function setItemToRemove(flowerId, appearance) {
+            document.getElementById('remove-confirmation-text').textContent = `Remove ${sanitizeHTML(cart.find(item => item.flower.id === flowerId && item.appearance === appearance).flower.name)} (${appearance}) from cart?`;
+            selectedItem = { flower: { id: flowerId }, appearance };
+            openModal('remove-confirmation-modal');
+        }
+
+        function confirmRemove() {
+            removeFromCart(selectedItem.flower.id, selectedItem.appearance);
+            closeModal('remove-confirmation-modal');
+        }
+
+        // Event Listeners
+        document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+        document.getElementById('contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('form-name').value;
+            const email = document.getElementById('form-email').value;
+            const message = document.getElementById('form-message').value;
+            if (name && email && message) {
+                console.log('Form submitted:', { name, email, message });
+                document.getElementById('form-success').classList.remove('hidden');
+                document.getElementById('contact-form').reset();
+                setTimeout(() => document.getElementById('form-success').classList.add('hidden'), 3000);
+            }
+        });
+        document.getElementById('search-name').addEventListener('input', renderFlowers);
+        document.getElementById('min-price').addEventListener('input', renderFlowers);
+        document.getElementById('max-price').addEventListener('input', renderFlowers);
+        document.getElementById('category-filter').addEventListener('change', renderFlowers);
+        document.getElementById('cart-link').addEventListener('mouseenter', () => {
+            if (cart.length === 0) {
+                document.getElementById('cart-preview').classList.remove('show');
+                return;
+            }
+            document.getElementById('cart-preview').classList.add('show');
+            document.getElementById('cart-preview-items').innerHTML = cart.map(item => `
+                <div class="flex justify-between py-1">
+                    <span>${sanitizeHTML(item.flower.name)} (${item.appearance}) x${item.count}</span>
+                    <span>$${(item.flower.price * item.count * item.flower.appearances[item.appearance].priceMultiplier).toFixed(2)}</span>
+                </div>
+            `).join('');
+            document.getElementById('cart-preview-total').textContent = getTotalPrice(cart);
+        });
+        document.getElementById('cart-link').addEventListener('mouseleave', () => {
+            document.getElementById('cart-preview').classList.remove('show');
+        });
+        document.getElementById('clear-cart').addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear the cart?')) clearCart();
+        });
+        document.getElementById('order-history-btn').addEventListener('click', () => {
+            openModal('order-history-modal');
+            renderOrderHistory();
+        });
+        window.addEventListener('hashchange', renderPage);
+
+        // Initialize
+        loadState();
+        document.body.classList.toggle('dark', theme === 'dark');
+        document.body.classList.toggle('bg-gray-800', theme === 'dark');
+        document.getElementById('navbar').classList.toggle('bg-gray-900', theme === 'dark');
+        document.getElementById('theme-toggle').textContent = theme === 'light' ? 'Dark Mode' : 'Light Mode';
+        updateCartCount();
+        renderPage();
+    </script>
 </body>
 
 </html>
